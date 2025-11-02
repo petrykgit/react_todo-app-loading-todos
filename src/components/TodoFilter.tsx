@@ -1,12 +1,16 @@
 import React from 'react';
-import { Filter } from '../types/Filter';
 import { Todo } from '../types/Todo';
+import cn from 'classnames';
+import {
+  TODO_STATUS_FILTER_OPTIONS,
+  TodoStatusFilter,
+} from '../types/TodoStatusFilter';
 
 interface TodoFilterProps {
   todos: Todo[];
-  filter: Filter;
+  filter: TodoStatusFilter;
   someCompleted: boolean;
-  setFilter: (newFilter: Filter) => void;
+  setFilter: (newFilter: TodoStatusFilter) => void;
 }
 
 export const TodoFilter: React.FC<TodoFilterProps> = ({
@@ -24,32 +28,19 @@ export const TodoFilter: React.FC<TodoFilterProps> = ({
       </span>
 
       <nav className="filter" data-cy="Filter">
-        <a
-          href="#/"
-          className={`filter__link ${filter === Filter.All ? 'selected' : ''}`}
-          data-cy="FilterLinkAll"
-          onClick={() => setFilter(Filter.All)}
-        >
-          All
-        </a>
-
-        <a
-          href="#/active"
-          className={`filter__link ${filter === Filter.Active ? 'selected' : ''}`}
-          data-cy="FilterLinkActive"
-          onClick={() => setFilter(Filter.Active)}
-        >
-          Active
-        </a>
-
-        <a
-          href="#/completed"
-          className={`filter__link ${filter === Filter.Completed ? 'selected' : ''}`}
-          data-cy="FilterLinkCompleted"
-          onClick={() => setFilter(Filter.Completed)}
-        >
-          Completed
-        </a>
+        {Object.entries(TODO_STATUS_FILTER_OPTIONS).map(
+          ([option, { href, testId, text }]) => (
+            <a
+              key={testId}
+              href={href}
+              className={cn('filter__link', { selected: filter === option })}
+              data-cy={testId}
+              onClick={() => setFilter(option as TodoStatusFilter)}
+            >
+              {text}
+            </a>
+          ),
+        )}
       </nav>
 
       <button

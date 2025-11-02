@@ -10,18 +10,18 @@ import React, {
 import { UserWarning } from './UserWarning';
 import { addTodo, getTodos, USER_ID } from './api/todos';
 import { Todo } from './types/Todo';
-import { Filter } from './types/Filter';
 import { Header } from './components/Header';
 import { TodoList } from './components/TodoList';
 import { TodoFilter } from './components/TodoFilter';
 import { ErrorNotification } from './components/ErrorNotification';
+import { TodoStatusFilter } from './types/TodoStatusFilter';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [newTodoTitle, setNewTodoTitle] = useState('');
-  const [filter, setFilter] = useState<Filter>(Filter.All);
+  const [filter, setFilter] = useState<TodoStatusFilter>(TodoStatusFilter.ALL);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -71,7 +71,7 @@ export const App: React.FC = () => {
     setIsAdding(true);
     addTodo(todo)
       .then(newTodo => {
-        setTodos(currentTodos => [newTodo, ...currentTodos]);
+        setTodos(currentTodos => [...currentTodos, newTodo]);
         setNewTodoTitle('');
         inputRef.current?.focus();
       })
@@ -103,19 +103,17 @@ export const App: React.FC = () => {
     setErrorMessage(null);
   };
 
-  const filteredTodos = todos
-    .filter(todo => {
-      switch (filter) {
-        case 'completed':
-          return todo.completed;
-        case 'active':
-          return !todo.completed;
-        case 'all':
-        default:
-          return true;
-      }
-    })
-    .reverse();
+  const filteredTodos = todos.filter(todo => {
+    switch (filter) {
+      case 'completed':
+        return todo.completed;
+      case 'active':
+        return !todo.completed;
+      case 'all':
+      default:
+        return true;
+    }
+  });
 
   const allCompleted =
     todos.length > 0 && todos.every(todo => todo.completed === true);

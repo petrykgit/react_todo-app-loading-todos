@@ -1,6 +1,7 @@
 import React from 'react';
 import { Todo } from '../types/Todo';
 import { Loader } from './Loader';
+import cn from 'classnames';
 
 interface TodoItemProps {
   todo: Todo;
@@ -11,7 +12,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo, isLoading }) => {
   return (
     <div
       data-cy="Todo"
-      className={`todo ${todo.completed ? 'completed' : ''}`}
+      className={cn('todo', { completed: todo.completed })}
       key={todo.id}
     >
       <label className="todo__status-label" htmlFor={`todo-status-${todo.id}`}>
