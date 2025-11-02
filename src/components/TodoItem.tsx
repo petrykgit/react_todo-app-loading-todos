@@ -34,7 +34,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo, isLoading }) => {
         ×
       </button>
 
-      {isLoading && <Loader />}
+      <Loader isLoading={isLoading} />
     </div>
   );
 };
